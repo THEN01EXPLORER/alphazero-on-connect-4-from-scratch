@@ -23,35 +23,151 @@ def column_top_row(board, column):
             return row
     return -1
 
-# Step 3 - drop_piece (not yet solved)
-# TODO: implement
+# Step 3 - drop_piece
+def drop_piece(board, column, player):
+    # TODO: place `player` in the lowest empty row of `column` and return the new board
+    
+    for row in range(board.shape[0] - 1, -1, -1):
+        if board[row, column] == 0:
+            new_board = board.copy()
+            new_board[row, column] = player
+            return new_board
 
-# Step 4 - column_full (not yet solved)
-# TODO: implement
+    raise ValueError("Column is full")
 
-# Step 5 - valid_moves (not yet solved)
-# TODO: implement
+# Step 4 - column_full
+import numpy as np
 
-# Step 6 - four_in_a_row_horizontal (not yet solved)
-# TODO: implement
 
-# Step 7 - four_in_a_row_vertical (not yet solved)
-# TODO: implement
+def column_full(board, column):
+    """Return True if the column has no empty rows left."""
+    return bool(board[0, column] != 0)
 
-# Step 8 - four_in_a_row_diagonal_down_right (not yet solved)
-# TODO: implement
+# Step 5 - valid_moves
+def valid_moves(board):
+    # TODO: return a list of column indices that still have at least one open spot
+    return [col for col in range(7) if not column_full(board, col)]
 
-# Step 9 - four_in_a_row_diagonal_up_right (not yet solved)
-# TODO: implement
+# Step 6 - four_in_a_row_horizontal
+def four_in_a_row_horizontal(board):
+    for row in range(6):
+        for col in range(4):
+            if (
+                board[row, col] != 0
+                and board[row, col] == board[row, col + 1]
+                and board[row, col] == board[row, col + 2]
+                and board[row, col] == board[row, col + 3]
+            ):
+                return int(board[row, col])
 
-# Step 10 - check_winner (not yet solved)
-# TODO: implement
+    return 0
 
-# Step 11 - board_is_full (not yet solved)
-# TODO: implement
+# Step 7 - four_in_a_row_vertical
+import numpy as np
 
-# Step 12 - is_terminal (not yet solved)
-# TODO: implement
+def four_in_a_row_vertical(board):
+    # Iterate over every column (0 to 6)
+    for c in range(7):
+        # A vertical win needs 4 slots, so it can only start in rows 0, 1, or 2
+        for r in range(3):
+            # Check if the current slot is not empty
+            if board[r, c] != 0:
+                # Check if the next 3 pieces below it match the current piece
+                if board[r, c] == board[r+1, c] == board[r+2, c] == board[r+3, c]:
+                    return int(board[r, c])
+                    
+    # Return 0 if no vertical win is found
+    return 0
+
+# Step 8 - four_in_a_row_diagonal_down_right
+import numpy as np
+
+def four_in_a_row_diagonal_down_right(board):
+    # Iterate over valid starting rows (0 to 2)
+    for r in range(3):
+        # Iterate over valid starting columns (0 to 3)
+        for c in range(4):
+            # Check if the starting slot is not empty
+            if board[r, c] != 0:
+                # Check the next 3 pieces down and to the right
+                if board[r, c] == board[r+1, c+1] == board[r+2, c+2] == board[r+3, c+3]:
+                    return int(board[r, c])
+                    
+    # Return 0 if no diagonal win is found
+    return 0
+
+# Step 9 - four_in_a_row_diagonal_up_right
+import torch
+
+def four_in_a_row_diagonal_up_right(board) -> int:
+    """
+    Detects four matching non-zero pieces along any up-right diagonal on a 6x7 board.
+    Accepts either a PyTorch Tensor or a nested list / NumPy array.
+    
+    Returns:
+        int: Winning player's ID (1 or 2), or 0 if no up-right 4-in-a-row exists.
+    """
+    # Convert input to a PyTorch tensor if it isn't one already
+    if not isinstance(board, torch.Tensor):
+        board = torch.tensor(board, dtype=torch.int32)
+
+    # Valid starting bottom-left positions for a 4-in-a-row up-right diagonal:
+    # Row must be at least 3 (indices 3, 4, 5) so we can go up 3 steps.
+    # Column must be at most 3 (indices 0, 1, 2, 3) so we can go right 3 steps.
+    for r in range(3, 6):
+        for c in range(4):
+            # Extract the 4 elements along the up-right diagonal
+            # (r, c), (r-1, c+1), (r-2, c+2), (r-3, c+3)
+            p1 = board[r, c]
+            
+            if p1 != 0:
+                p2 = board[r - 1, c + 1]
+                p3 = board[r - 2, c + 2]
+                p4 = board[r - 3, c + 3]
+                
+                if p1 == p2 == p3 == p4:
+                    return int(p1.item())
+
+    return 0
+
+# Step 10 - check_winner
+def check_winner(board):
+    """Return 1 or 2 if that player has four in a row, else 0."""
+    # Check all four directional scan helpers with short-circuit evaluation
+    winner = four_in_a_row_horizontal(board)
+    if winner != 0:
+        return winner
+        
+    winner = four_in_a_row_vertical(board)
+    if winner != 0:
+        return winner
+        
+    winner = four_in_a_row_diagonal_down_right(board)
+    if winner != 0:
+        return winner
+        
+    winner = four_in_a_row_diagonal_up_right(board)
+    if winner != 0:
+        return winner
+        
+    return 0
+
+# Step 11 - board_is_full
+def board_is_full(board):
+    """Return True when no column has an empty slot left, else False."""
+    return len(valid_moves(board)) == 0
+
+# Step 12 - is_terminal
+def is_terminal(board):
+    """Return a tuple (done, winner) using check_winner and board_is_full."""
+    winner = check_winner(board)
+    if winner != 0:
+        return (True, winner)
+    
+    if board_is_full(board):
+        return (True, 0)
+        
+    return (False, 0)
 
 # Step 13 - other_player (not yet solved)
 # TODO: implement

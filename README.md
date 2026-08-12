@@ -12,16 +12,16 @@ python scaffold.py
 
 - [x] **1.** make_empty_board
 - [x] **2.** column_top_row
-- [ ] **3.** drop_piece
-- [ ] **4.** column_full
-- [ ] **5.** valid_moves
-- [ ] **6.** four_in_a_row_horizontal
-- [ ] **7.** four_in_a_row_vertical
-- [ ] **8.** four_in_a_row_diagonal_down_right
-- [ ] **9.** four_in_a_row_diagonal_up_right
-- [ ] **10.** check_winner
-- [ ] **11.** board_is_full
-- [ ] **12.** is_terminal
+- [x] **3.** drop_piece
+- [x] **4.** column_full
+- [x] **5.** valid_moves
+- [x] **6.** four_in_a_row_horizontal
+- [x] **7.** four_in_a_row_vertical
+- [x] **8.** four_in_a_row_diagonal_down_right
+- [x] **9.** four_in_a_row_diagonal_up_right
+- [x] **10.** check_winner
+- [x] **11.** board_is_full
+- [x] **12.** is_terminal
 - [ ] **13.** other_player
 - [ ] **14.** step_env
 - [ ] **15.** encode_board
