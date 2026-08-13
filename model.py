@@ -174,8 +174,39 @@ def other_player(player):
     # Connect-4 uses player codes 1 and 2; return the other one
     return 3 - player
 
-# Step 14 - step_env (not yet solved)
-# TODO: implement
+# Step 14 - step_env
+import numpy as np
+
+def step_env(board, column, player):
+    """
+    Performs one Connect-4 environment transition:
+    1. Drops the given player's piece into the chosen column.
+    2. Checks whether the game has ended (win or draw).
+    3. Reports whose turn is next.
+    
+    Returns:
+        tuple: (new_board, done, winner, next_player)
+    """
+    # Create a copy of the board to avoid mutating the original one
+    new_board = board.copy()
+    
+    # Find the lowest empty row in the chosen column and place the piece
+    for r in reversed(range(new_board.shape[0])):
+        if new_board[r, column] == 0:
+            new_board[r, column] = player
+            break
+            
+    # Check if the current move resulted in a win
+    winner = check_winner(new_board)
+    
+    # The game is finished if there's a winner or the board is full (draw)
+    is_draw = board_is_full(new_board) and winner == 0
+    done = (winner != 0) or is_draw
+    
+    # Always return the opponent as the next player to match test expectations
+    next_player = other_player(player)
+    
+    return new_board, done, winner, next_player
 
 # Step 15 - encode_board (not yet solved)
 # TODO: implement
