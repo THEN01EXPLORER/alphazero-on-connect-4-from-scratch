@@ -169,8 +169,10 @@ def is_terminal(board):
         
     return (False, 0)
 
-# Step 13 - other_player (not yet solved)
-# TODO: implement
+# Step 13 - other_player
+def other_player(player):
+    # Connect-4 uses player codes 1 and 2; return the other one
+    return 3 - player
 
 # Step 14 - step_env (not yet solved)
 # TODO: implement
