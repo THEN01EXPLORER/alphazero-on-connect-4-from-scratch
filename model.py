@@ -208,8 +208,29 @@ def step_env(board, column, player):
     
     return new_board, done, winner, next_player
 
-# Step 15 - encode_board (not yet solved)
-# TODO: implement
+# Step 15 - encode_board
+import numpy as np
+
+def encode_board(board, current_player):
+    """
+    Encode a 6x7 board as a (2, 6, 7) float32 tensor from current_player perspective.
+    """
+    board = np.array(board)
+    
+    # In Connect-4, players are typically 1 and 2. 
+    # We can find the opponent using 3 - current_player.
+    other_player = 3 - current_player
+    
+    # Channel 0: current player's pieces
+    plane_current = (board == current_player).astype(np.float32)
+    
+    # Channel 1: opponent's pieces
+    plane_opponent = (board == other_player).astype(np.float32)
+    
+    # Stack them to get a shape of (2, 6, 7)
+    encoded = np.stack([plane_current, plane_opponent], axis=0)
+    
+    return encoded
 
 # Step 16 - board_to_torch_tensor (not yet solved)
 # TODO: implement
