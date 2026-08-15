@@ -232,8 +232,10 @@ def encode_board(board, current_player):
     
     return encoded
 
-# Step 16 - board_to_torch_tensor (not yet solved)
-# TODO: implement
+# Step 16 - board_to_torch_tensor
+def board_to_torch_tensor(board, current_player):
+    encoded = encode_board(board, current_player)
+    return torch.tensor(encoded, dtype=torch.float32).unsqueeze(0)
 
 # Step 17 - init_conv_backbone (not yet solved)
 # TODO: implement
