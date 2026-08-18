@@ -15,13 +15,20 @@ def make_empty_board():
     return np.zeros((6,7),dtype = np.int8)
 
 # Step 2 - column_top_row
+# def column_top_row(board, column):
+#     """Return the lowest empty row in `column`, or -1 if the column is full."""
+#     # TODO: scan the column from the bottom up and return the first empty row index
+#     for row in range(board.shape[0] - 1,-1,-1):
+#         if board[row,column]  ==  0:
+#             return row
+#     return -1
 def column_top_row(board, column):
-    """Return the lowest empty row in `column`, or -1 if the column is full."""
-    # TODO: scan the column from the bottom up and return the first empty row index
-    for row in range(board.shape[0] - 1,-1,-1):
-        if board[row,column]  ==  0:
-            return row
-    return -1
+    # 1. Grab the entire column array: board[:, column]
+    # 2. Find where it equals 0, returning an array of indices
+    empty_indices = np.where(board[:, column] == 0)[0]
+    
+    # 3. If the array isn't empty, the last index [-1] is our lowest empty row
+    return empty_indices[-1] if empty_indices.size > 0 else -1
 
 # Step 3 - drop_piece
 def drop_piece(board, column, player):
