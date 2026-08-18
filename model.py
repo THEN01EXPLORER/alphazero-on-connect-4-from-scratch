@@ -12,7 +12,7 @@ import numpy as np
 def make_empty_board():
     """Return a 6x7 integer numpy array of zeros representing an empty Connect-4 board."""
     # TODO: create a 6x7 integer array of zeros and return it
-    return np.zeros((6,7),dtype = int)
+    return np.zeros((6,7),dtype = np.int8)
 
 # Step 2 - column_top_row
 def column_top_row(board, column):
