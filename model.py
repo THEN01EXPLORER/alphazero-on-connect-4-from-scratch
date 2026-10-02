@@ -283,8 +283,41 @@ def init_value_head(hidden_channels=16):
         nn.Tanh()
     )
 
-# Step 20 - build_policy_value_net (not yet solved)
-# TODO: implement
+# Step 20 - build_policy_value_net
+import torch
+import torch.nn as nn
+
+def build_policy_value_net(in_channels=2, hidden_channels=16, num_columns=7):
+    """Compose backbone + policy head + value head into one nn.Module."""
+    # TODO: build an nn.Module with backbone, policy_head, value_head attributes
+    class PolicyValueNet(nn.Module):
+        def __init__(self):
+            super().__init__()
+
+            self.backbone = nn.Sequential(
+                nn.Conv2d(in_channels, hidden_channels, kernel_size=3, padding=1),
+                nn.ReLU()
+            )
+
+            self.policy_head = nn.Sequential(
+                nn.Conv2d(hidden_channels, 1, kernel_size=1),
+                nn.Flatten(start_dim=1),
+                nn.Linear(42, num_columns)
+            )
+
+            self.value_head = nn.Sequential(
+                nn.Flatten(start_dim=1),
+                nn.Linear(hidden_channels * 6 * 7, 1),
+                nn.Tanh()
+            )
+
+        def forward(self, x):
+            features = self.backbone(x)
+            logits = self.policy_head(features)
+            value = self.value_head(features)
+            return logits, value
+
+    return PolicyValueNet()
 
 # Step 21 - policy_value_forward (not yet solved)
 # TODO: implement
